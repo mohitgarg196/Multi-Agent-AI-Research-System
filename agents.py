@@ -1,14 +1,14 @@
 from langchain.agents import create_agent
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from tools import web_search , scrape_url 
+from tools import web_search , scrape_url
 from dotenv import load_dotenv
 
 load_dotenv()
 
-#model setup 
-llm = ChatOpenAI(model = "gpt-4o-mini",temperature=0)
+#model setup
+llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
 
 
 #1st agent 

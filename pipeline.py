@@ -1,4 +1,11 @@
 from agents import build_reader_agent , build_search_agent , writer_chain , critic_chain
+from langchain_core.messages import ToolMessage
+
+def get_last_tool_output(messages):
+    for msg in reversed(messages):
+        if isinstance(msg, ToolMessage):
+            return msg.content
+    return messages[-1].content
 
 def run_research_pipeline(topic : str) -> dict:
 
@@ -13,7 +20,7 @@ def run_research_pipeline(topic : str) -> dict:
     search_result = search_agent.invoke({
         "messages" : [("user", f"Find recent, reliable and detailed information about: {topic}")]
     })
-    state["search_results"] = search_result['messages'][-1].content
+    state["search_results"] = get_last_tool_output(search_result['messages'])
 
     print("\n search result ",state['search_results'])
 
@@ -31,7 +38,7 @@ def run_research_pipeline(topic : str) -> dict:
         )]
     })
 
-    state['scraped_content'] = reader_result['messages'][-1].content
+    state['scraped_content'] = get_last_tool_output(reader_result['messages'])
 
     print("\nscraped content: \n", state['scraped_content'])
 
